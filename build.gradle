@@ -1,0 +1,85 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.10.RELEASE'
+    }
+}
+plugins {
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'war'
+    id 'lenala.azure.azurewebapp' version '1.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+azureWebApp {
+    resourceGroup = 'CW2'
+    appName = 'WebTechCW2'
+    pricingTier = 'F1'
+    region = 'uksouth'
+    appService = {
+        type = 'windows'
+        javaWebContainer = 'tomcat 8.5'
+        javaVersion = '1.8'
+    }
+    authentication = {
+        type = 'azurecli'
+    }
+    deployment = {
+        type = 'war'
+    }
+}
+dependencies {
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'org.json:json:20171018'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // JSP
+    compile("org.apache.tomcat.embed:tomcat-embed-jasper:9.0.0.M26")
+    compile("javax.servlet:jstl:1.2")
+    // Bootstrap
+    compile("org.webjars:bootstrap:3.3.7")
+    // persistence
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    runtime("mysql:mysql-connector-java")
+
+
+
+    // Spring
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testCompile('org.springframework.security:spring-security-test:4.1.1.RELEASE')
+
+
+
+    runtime('com.h2database:h2')
+//
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'org.json:json:20171018'
+/// https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable
+    compile group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.0'
+//	implementation 'org.junit.jupiter:junit-jupiter'
+
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
